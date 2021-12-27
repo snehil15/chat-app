@@ -13,6 +13,12 @@ body {
   text-align: center;
 }
 
+@media (max-width: 900px) {
+  .Chat {
+    width: 90%;
+  }
+}
+
 .chat-header {
   border: 0.15rem solid #b8cce4;
   background-color: #dbe5f1;
@@ -23,7 +29,7 @@ body {
 }
 
 .chat-body {
-  background: url("https://www.wallpapertip.com/wmimgs/147-1471247_aesthetic-wallpaper-for-whatsapp-chat-background.jpg");
+  background: url("./images/chatwallpaper.jpg");
   height: 85%;
 }
 
