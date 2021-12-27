@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+body {
+  margin: 0;
+  background-color: #213b48;
+}
+.Chat {
+  width: 36%;
+  height: 100vh;
+  margin: auto;
+  padding-top: 2rem;
+  text-align: center;
+}
+
+.chat-header {
+  border: 0.15rem solid #b8cce4;
+  background-color: #dbe5f1;
+  border-radius: 0.1rem;
+}
+.chat-header h3 {
+  margin: 0.5rem 0;
+}
+
+.chat-body {
+  background: url("https://www.wallpapertip.com/wmimgs/147-1471247_aesthetic-wallpaper-for-whatsapp-chat-background.jpg");
+  height: 85%;
+}
+
+.left {
+  float: left;
+  text-align: left;
+}
+.right {
+  float: right;
+  text-align: right;
+}
+
+.msg {
+  margin: 1rem 1rem 0 1rem;
+  max-width: 50%;
+  clear: both;
+  word-wrap: break-word;
+}
+
+.msg-content {
+  margin: 0;
+  padding: 0.5rem;
+  vertical-align: middle;
+  background-color: white;
+  border: 0.1rem solid white;
+  border-radius: 0.25rem;
+}
+
+.msg-footer {
+  display: inline-block;
+  margin: 0 0.5rem 0 0.5rem;
+  color: white;
+  font-size: 0.75rem;
+}
+
+.msg-input {
+  width: 92%;
+  height: 2.5rem;
+  float: left;
+}
+
+.msg-send {
+  display: inline-block;
+  height: 2.5rem;
+  width: 8%;
+  color: white;
+  background-color: #194728;
+  border: none;
+}
