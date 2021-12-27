@@ -1,13 +1,14 @@
 {
   "files": {
-    "main.css": "/chat-app/static/css/main.3781999d.css",
-    "main.js": "/chat-app/static/js/main.bd273abf.js",
+    "main.css": "/chat-app/static/css/main.db47b72b.css",
+    "main.js": "/chat-app/static/js/main.acc128e4.js",
+    "static/media/chatwallpaper.jpg": "/chat-app/static/media/chatwallpaper.a3f7b7ede50fd03f6fb9.jpg",
     "index.html": "/chat-app/index.html",
-    "main.3781999d.css.map": "/chat-app/static/css/main.3781999d.css.map",
-    "main.bd273abf.js.map": "/chat-app/static/js/main.bd273abf.js.map"
+    "main.db47b72b.css.map": "/chat-app/static/css/main.db47b72b.css.map",
+    "main.acc128e4.js.map": "/chat-app/static/js/main.acc128e4.js.map"
   },
   "entrypoints": [
-    "static/css/main.3781999d.css",
-    "static/js/main.bd273abf.js"
+    "static/css/main.db47b72b.css",
+    "static/js/main.acc128e4.js"
   ]
 }
