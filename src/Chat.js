@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import "./Chat.css";
 
-const Chat = ({ socket, username, room }) => {
+const Chat = ({ socket, username, room, hideChat }) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
 
@@ -24,21 +24,46 @@ const Chat = ({ socket, username, room }) => {
     }
   };
 
+  const leaveChat = () => {
+    hideChat();
+    socket.emit("leave_room", { room, username });
+  };
+
   useEffect(() => {
     socket.on("recieve_message", (data) => {
       setMessageList((list) => [...list, data]);
     });
+    socket.on("user_joined", (username) => {
+      const data = {
+        type: "user_joined",
+        message: `${username} joined.`,
+      };
+      setMessageList((list) => [...list, data]);
+    });
+    socket.on("user_left", (username) => {
+      const data = {
+        type: "user_left",
+        message: `${username} left.`,
+      };
+      setMessageList((list) => [...list, data]);
+    });
+    // socket.on("disconnect", (socket) => {
+    //   socket.to(room).emit("leave_room", { room, username });
+    // });
   }, [socket]);
 
   return (
     <div className="Chat">
       <div className="chat-header">
         <h3>Chat App</h3>
+        <button className="leave-chat" onClick={leaveChat}>
+          Leave Chat
+        </button>
       </div>
 
       <ScrollToBottom className="chat-body">
         {messageList.map((data) => {
-          return (
+          return !data.type ? (
             <div
               key={Math.random() * 999}
               className={username === data.author ? "msg right" : "msg left"}
@@ -46,6 +71,10 @@ const Chat = ({ socket, username, room }) => {
               <p className="msg-content">{data.message}</p>
               <span className="msg-footer">{data.author}</span>
               <span className="msg-footer">{data.time}</span>
+            </div>
+          ) : (
+            <div className="user-join">
+              <p>{data.message}</p>
             </div>
           );
         })}
