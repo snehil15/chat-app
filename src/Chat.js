@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
 import "./Chat.css";
 
+const audio = new Audio(require("./notification.mp3"));
+
 const Chat = ({ socket, username, room, hideChat }) => {
   const [currentMessage, setCurrentMessage] = useState("");
   const [messageList, setMessageList] = useState([]);
@@ -32,6 +34,7 @@ const Chat = ({ socket, username, room, hideChat }) => {
   useEffect(() => {
     socket.on("recieve_message", (data) => {
       setMessageList((list) => [...list, data]);
+      audio.play();
     });
     socket.on("user_joined", (username) => {
       const data = {

@@ -3,8 +3,8 @@ import { io } from "socket.io-client";
 import { useState } from "react";
 import Chat from "./Chat";
 
-// const socket = io("https://chat-server-socketio1.herokuapp.com/");
-const socket = io("http://localhost:3001", { forceNew: true });
+const socket = io("https://chat-server-socketio1.herokuapp.com/");
+// const socket = io("http://localhost:3001", { forceNew: true });
 
 function App() {
   const [username, setUsername] = useState();
