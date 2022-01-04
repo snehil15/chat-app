@@ -7,7 +7,7 @@ const Canvas = ({ socket, room }) => {
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("black");
   const [brushSize, setBrushSize] = useState(3);
-  const [firstLoadFlag, setFirstLoadFlag] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const mouseUp = async (e) => setDrawing(false);
 
@@ -23,12 +23,14 @@ const Canvas = ({ socket, room }) => {
   //   }
   // };
 
-  const onChange = async (e) => {
-    if (drawing && !firstLoadFlag) {
-      await socket.emit("drawing", {
-        canvasState: canvasRef.current.getSaveData(),
-        room,
-      });
+  const onChange = (e) => {
+    if (drawing && !loading) {
+      setTimeout(() => {
+        socket.emit("drawing", {
+          updatedState: canvasRef.current.getSaveData(),
+          room,
+        });
+      }, 200);
     }
   };
 
@@ -37,19 +39,20 @@ const Canvas = ({ socket, room }) => {
   };
 
   const wheel = async (e) => {
+    if (drawing) return;
     e.preventDefault();
     setTimeout(() => {
       setBrushSize((prev) => {
         let size = prev + e.deltaY * -0.2;
         return size <= 1 || size >= 15 ? prev : size;
       });
-    }, 150);
+    }, 500);
   };
 
   const clear = async (e) => {
     canvasRef.current.clear();
     await socket.emit("drawing", {
-      canvasState: canvasRef.current.getSaveData(),
+      updatedState: canvasRef.current.getSaveData(),
       room,
     });
   };
@@ -57,29 +60,33 @@ const Canvas = ({ socket, room }) => {
   const undo = async (e) => {
     canvasRef.current.undo();
     await socket.emit("drawing", {
-      canvasState: canvasRef.current.getSaveData(),
+      updatedState: canvasRef.current.getSaveData(),
       room,
     });
   };
 
   useEffect(() => {
-    setFirstLoadFlag(true);
+    setLoading(true);
     if (!canvasRef) return;
     socket.on("get_canvas_data", (data) => {
       if (canvasRef.current) {
         canvasRef.current.loadSaveData(data.canvasData);
       }
     });
-    setFirstLoadFlag(false);
+    setLoading(false);
   }, []);
 
   useEffect(() => {
+    setLoading(true);
     if (!canvasRef) return;
     socket.on("update_canvas", (data) => {
-      if (!(data.id == socket.id) && canvasRef.current) {
-        canvasRef.current.loadSaveData(data.canvasState);
-      }
+      let last = data.canvasData[data.canvasData.length - 1];
+      // if (!(data.id == socket.id) && canvasRef.current) {
+      // data.canvasData.forEach((ele) => );
+      // console.log(data.canvasData[data.canvasData.length - 1]);
+      canvasRef.current.loadSaveData(last);
     });
+    setLoading(false);
   }, [socket]);
 
   return (
@@ -98,8 +105,8 @@ const Canvas = ({ socket, room }) => {
         lazyRadius={2}
         brushRadius={brushSize}
         brushColor={color}
-        onChange={() => onChange()}
         immediateLoading={true}
+        onChange={() => onChange()}
       />
       <button className="clear-btn" onClick={(e) => clear(e)}>
         Clear

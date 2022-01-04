@@ -5,7 +5,9 @@ import Chat from "./components/Chat";
 import Canvas from "./components/Canvas";
 
 const socket = io("https://chat-server-socketio1.herokuapp.com/");
-// const socket = io("http://localhost:3001", { forceNew: true });
+// const socket = io("http://localhost:3001", {
+//   forceNew: true,
+// });
 
 function App() {
   const [username, setUsername] = useState();
