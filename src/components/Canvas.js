@@ -7,21 +7,24 @@ const Canvas = ({ socket, room }) => {
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("black");
   const [brushSize, setBrushSize] = useState(3);
-  // const [width, setWidth] = useState(600);
+  const [firstLoadFlag, setFirstLoadFlag] = useState(true);
 
-  const mouseUp = (e) => setDrawing(false);
+  const mouseUp = async (e) => setDrawing(false);
 
-  const mouseDown = (e) => setDrawing(true);
+  const mouseDown = async (e) => setDrawing(true);
 
-  const mouseMove = async (e) => {
-    await socket.emit("drawing", {
-      canvasState: canvasRef.current.getSaveData(),
-      room,
-    });
-  };
+  // const mouseMove = async (e) => {
+  //   console.log("mousemove");
+  //   if (drawing) {
+  //     await socket.emit("drawing", {
+  //       canvasState: canvasRef.current.getSaveData(),
+  //       room,
+  //     });
+  //   }
+  // };
 
   const onChange = async (e) => {
-    if (drawing) {
+    if (drawing && !firstLoadFlag) {
       await socket.emit("drawing", {
         canvasState: canvasRef.current.getSaveData(),
         room,
@@ -33,19 +36,47 @@ const Canvas = ({ socket, room }) => {
     setColor(e.target.value);
   };
 
-  const wheel = (e) => {
+  const wheel = async (e) => {
     e.preventDefault();
-    // console.log(e.deltaY);
-    setBrushSize((prev) => {
-      let size = prev + e.deltaY * -0.2;
-      return size <= 1 || size >= 15 ? prev : size;
+    setTimeout(() => {
+      setBrushSize((prev) => {
+        let size = prev + e.deltaY * -0.2;
+        return size <= 1 || size >= 15 ? prev : size;
+      });
+    }, 150);
+  };
+
+  const clear = async (e) => {
+    canvasRef.current.clear();
+    await socket.emit("drawing", {
+      canvasState: canvasRef.current.getSaveData(),
+      room,
+    });
+  };
+
+  const undo = async (e) => {
+    canvasRef.current.undo();
+    await socket.emit("drawing", {
+      canvasState: canvasRef.current.getSaveData(),
+      room,
     });
   };
 
   useEffect(() => {
+    setFirstLoadFlag(true);
+    if (!canvasRef) return;
+    socket.on("get_canvas_data", (data) => {
+      if (canvasRef.current) {
+        canvasRef.current.loadSaveData(data.canvasData);
+      }
+    });
+    setFirstLoadFlag(false);
+  }, []);
+
+  useEffect(() => {
     if (!canvasRef) return;
     socket.on("update_canvas", (data) => {
-      if (canvasRef.current) {
+      if (!(data.id == socket.id) && canvasRef.current) {
         canvasRef.current.loadSaveData(data.canvasState);
       }
     });
@@ -55,10 +86,10 @@ const Canvas = ({ socket, room }) => {
     <div
       id="canvas"
       className="canvas"
-      onMouseDown={mouseDown}
-      onMouseUp={mouseUp}
-      onMouseMove={mouseMove}
-      onWheel={wheel}
+      onMouseDown={(e) => mouseDown(e)}
+      onMouseUp={(e) => mouseUp(e)}
+      // onMouseMove={(e) => mouseMove(e)}
+      onWheel={(e) => wheel(e)}
     >
       <CanvasDraw
         ref={canvasRef}
@@ -67,13 +98,13 @@ const Canvas = ({ socket, room }) => {
         lazyRadius={2}
         brushRadius={brushSize}
         brushColor={color}
-        onChange={onChange}
+        onChange={() => onChange()}
         immediateLoading={true}
       />
-      <button className="clear-btn" onClick={() => canvasRef.current.clear()}>
+      <button className="clear-btn" onClick={(e) => clear(e)}>
         Clear
       </button>
-      <button className="undo-btn" onClick={() => canvasRef.current.undo()}>
+      <button className="undo-btn" onClick={(e) => undo(e)}>
         Undo
       </button>
       <input className="colorpicker" type="color" onChange={colorChange} />

@@ -108,7 +108,7 @@ const Chat = ({ socket, username, room, hideChat }) => {
         </div>
       );
     }
-    if (message.type === "user_joined") {
+    if (message.type === "user_joined" || message.type === "user_left") {
       return (
         <div key={index} className="user-join">
           <p>{message.message}</p>
