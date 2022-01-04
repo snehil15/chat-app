@@ -13,16 +13,16 @@ const Canvas = ({ socket, room }) => {
 
   const mouseDown = (e) => setDrawing(true);
 
-  const mouseMove = (e) => {
-    socket.emit("drawing", {
+  const mouseMove = async (e) => {
+    await socket.emit("drawing", {
       canvasState: canvasRef.current.getSaveData(),
       room,
     });
   };
 
-  const onChange = (e) => {
+  const onChange = async (e) => {
     if (drawing) {
-      socket.emit("drawing", {
+      await socket.emit("drawing", {
         canvasState: canvasRef.current.getSaveData(),
         room,
       });
@@ -33,14 +33,14 @@ const Canvas = ({ socket, room }) => {
     setColor(e.target.value);
   };
 
-  // const wheel = (e) => {
-  //   e.preventDefault();
-  //   console.log(e.deltaY);
-  //   setBrushSize((prev) => {
-  //     let size = prev + e.deltaY * -0.2;
-  //     return size <= 1 || size >= 15 ? prev : size;
-  //   });
-  // };
+  const wheel = (e) => {
+    e.preventDefault();
+    // console.log(e.deltaY);
+    setBrushSize((prev) => {
+      let size = prev + e.deltaY * -0.2;
+      return size <= 1 || size >= 15 ? prev : size;
+    });
+  };
 
   useEffect(() => {
     if (!canvasRef) return;
@@ -58,7 +58,7 @@ const Canvas = ({ socket, room }) => {
       onMouseDown={mouseDown}
       onMouseUp={mouseUp}
       onMouseMove={mouseMove}
-      // onWheel={wheel}
+      onWheel={wheel}
     >
       <CanvasDraw
         ref={canvasRef}
