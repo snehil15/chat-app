@@ -5,6 +5,7 @@
   font-family: "Roboto", sans-serif;
 }
 .App {
+  display: flex;
   text-align: center;
   height: 100vh;
 }

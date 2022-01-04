@@ -1,15 +1,21 @@
 import "./App.css";
 import { io } from "socket.io-client";
 import { useState } from "react";
-import Chat from "./Chat";
+import Chat from "./components/Chat";
+import Canvas from "./components/Canvas";
 
-const socket = io("https://chat-server-socketio1.herokuapp.com/");
-// const socket = io("http://localhost:3001", { forceNew: true });
+// const socket = io("https://chat-server-socketio1.herokuapp.com/");
+const socket = io("http://localhost:3001", { forceNew: true });
 
 function App() {
   const [username, setUsername] = useState();
   const [room, setRoom] = useState();
   const [showChat, setShowChat] = useState();
+  const [width, setWidth] = useState(window.innerWidth);
+
+  window.addEventListener("resize", () => {
+    setWidth(window.innerWidth);
+  });
 
   const joinRoom = (e) => {
     e.preventDefault();
@@ -45,12 +51,15 @@ function App() {
           </form>
         </div>
       ) : (
-        <Chat
-          socket={socket}
-          username={username}
-          room={room}
-          hideChat={hideChat}
-        />
+        <>
+          <Chat
+            socket={socket}
+            username={username}
+            room={room}
+            hideChat={hideChat}
+          />
+          {width > 1000 ? <Canvas socket={socket} room={room} /> : ""}
+        </>
       )}
     </div>
   );
