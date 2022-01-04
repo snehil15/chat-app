@@ -6,7 +6,7 @@ const Canvas = ({ socket, room }) => {
   const canvasRef = useRef(null);
   const [drawing, setDrawing] = useState(false);
   const [color, setColor] = useState("black");
-  const [brushSize, setBrushSize] = useState(2);
+  const [brushSize, setBrushSize] = useState(3);
   // const [width, setWidth] = useState(600);
 
   const mouseUp = (e) => setDrawing(false);
@@ -33,14 +33,14 @@ const Canvas = ({ socket, room }) => {
     setColor(e.target.value);
   };
 
-  const wheel = (e) => {
-    e.preventDefault();
-    console.log(e.deltaY);
-    setBrushSize((prev) => {
-      let size = prev + e.deltaY * -0.2;
-      return size <= 1 || size >= 15 ? prev : size;
-    });
-  };
+  // const wheel = (e) => {
+  //   e.preventDefault();
+  //   console.log(e.deltaY);
+  //   setBrushSize((prev) => {
+  //     let size = prev + e.deltaY * -0.2;
+  //     return size <= 1 || size >= 15 ? prev : size;
+  //   });
+  // };
 
   useEffect(() => {
     if (!canvasRef) return;
@@ -58,7 +58,7 @@ const Canvas = ({ socket, room }) => {
       onMouseDown={mouseDown}
       onMouseUp={mouseUp}
       onMouseMove={mouseMove}
-      onWheel={wheel}
+      // onWheel={wheel}
     >
       <CanvasDraw
         ref={canvasRef}

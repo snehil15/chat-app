@@ -15,7 +15,7 @@ const Image = ({ message, blob }) => {
   useEffect(async () => {
     await readFile().then((res) => {
       setImageSrc(res);
-      console.log(res);
+      // console.log(res);
     });
     // setImageSrc(res);
   }, [blob]);
