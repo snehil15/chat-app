@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import ScrollToBottom from "react-scroll-to-bottom";
-import Image from "../components/Image";
+// import Image from "../components/Image";
 import "./Chat.css";
 
 const audio = new Audio(require("../audio/notification.mp3"));
@@ -83,19 +83,19 @@ const Chat = ({ socket, username, room, hideChat }) => {
   }, [socket]);
 
   const renderMessages = (message, index) => {
-    if (message.type === "file") {
-      const blob = new Blob([message.file], { type: message.type });
-      return (
-        <div
-          key={index}
-          className={socket.id === message.id ? "msg right" : "msg left"}
-        >
-          <Image message={message.message} blob={blob} />
-          <span className="msg-footer">{message.author}</span>
-          <span className="msg-footer">{message.time}</span>
-        </div>
-      );
-    }
+    // if (message.type === "file") {
+    //   const blob = new Blob([message.file], { type: message.type });
+    //   return (
+    //     <div
+    //       key={index}
+    //       className={socket.id === message.id ? "msg right" : "msg left"}
+    //     >
+    //       <Image message={message.message} blob={blob} />
+    //       <span className="msg-footer">{message.author}</span>
+    //       <span className="msg-footer">{message.time}</span>
+    //     </div>
+    //   );
+    // }
     if (message.type === "text") {
       return (
         <div
@@ -139,13 +139,13 @@ const Chat = ({ socket, username, room, hideChat }) => {
             value={currentMessage}
             onChange={({ target }) => setCurrentMessage(target.value)}
           />
-          <input
+          {/* <input
             accept="image/*"
             data-max-size="1000000"
             onChange={selectFile}
             className="file-send"
             type="file"
-          />
+          /> */}
           <button type="submit" className="msg-send">
             &#9658;
           </button>

@@ -94,22 +94,22 @@ body {
 }
 
 .msg-input {
-  width: 75%;
+  width: 85%;
   height: 100%;
   float: left;
 }
 
-.file-send {
+/* .file-send {
   display: inline-block;
   width: 15%;
   height: 100%;
   border: none;
-}
+} */
 
 .msg-send {
   display: inline-block;
   height: 100%;
-  width: 10%;
+  width: 15%;
   color: white;
   background-color: #194728;
   border: none;
