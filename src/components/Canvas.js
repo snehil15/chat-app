@@ -6,8 +6,8 @@ const Canvas = ({ socket, room }) => {
   const [ctx, setCtx] = useState({});
   const [mouseDown, setMouseDown] = useState(false);
   const [color, setColor] = useState("black");
+  const [current, setCurrent] = useState({});
   var rect = {};
-  let x, y;
 
   useEffect(() => {
     setCtx(canvasRef.current.getContext("2d"));
@@ -15,35 +15,28 @@ const Canvas = ({ socket, room }) => {
   });
 
   useEffect(() => {
-    let curCtx = canvasRef.current.getContext("2d");
+    let ctx = canvasRef.current.getContext("2d");
     console.log("use effect");
-    socket.on("onmousedown", (data) => {
-      curCtx.beginPath();
-      curCtx.moveTo(data.x, data.y);
-    });
-    socket.on("ondraw", (data) => {
-      curCtx.lineCap = "round";
-      curCtx.lineWidth = 5;
-      curCtx.strokeStyle = data.color;
-      curCtx.lineTo(data.x, data.y);
-      curCtx.stroke();
-      curCtx.beginPath();
-      curCtx.moveTo(data.x, data.y);
+    // socket.on("onmousedown", (data) => {
+    //   ctx.beginPath();
+    //   ctx.moveTo(data.x, data.y);
+    // });
+    socket.on("ondraw", (data, color) => {
+      drawLine(data, color, false);
     });
     socket.on("onclear", () => {
-      curCtx.clearRect(0, 0, rect.width, rect.height);
-      curCtx.beginPath();
+      ctx.clearRect(0, 0, rect.width, rect.height);
+      ctx.beginPath();
     });
     socket.on("bgcolorchange", (color) => {
-      curCtx.fillStyle = color;
-      curCtx.fillRect(0, 0, rect.width, rect.height);
+      ctx.fillStyle = color;
+      ctx.fillRect(0, 0, rect.width, rect.height);
     });
   }, [socket]);
 
   const throttle = (callback, delay) => {
     var prevCall = 0;
     return (...args) => {
-      // console.log(arguments);
       var now = new Date().getTime();
       if (now - prevCall >= delay) {
         prevCall = now;
@@ -52,44 +45,59 @@ const Canvas = ({ socket, room }) => {
     };
   };
 
-  const onMouseMove = async (e) => {
-    x = e.clientX - rect.x;
-    y = e.clientY - rect.y;
-    if (!mouseDown) return;
-    await socket.emit("drawing", room, x, y, color);
-    ctx.lineWidth = 5;
-    ctx.lineCap = "round";
+  const drawLine = (data, color, emit) => {
+    let ctx = canvasRef.current.getContext("2d");
+    ctx.beginPath();
+    ctx.moveTo(data.x1, data.y1);
+    ctx.lineTo(data.x2, data.y2);
     ctx.strokeStyle = color;
-    ctx.lineTo(x, y);
+    ctx.lineCap = "round";
+    ctx.lineWidth = 4;
     ctx.stroke();
     ctx.beginPath();
-    ctx.moveTo(x, y);
+
+    if (!emit) return;
+    socket.emit("drawing", room, data, color);
+  };
+
+  const onMouseMove = async (e) => {
+    if (!mouseDown) return;
+    let relX = e.clientX - rect.x;
+    let relY = e.clientY - rect.y;
+    drawLine({ x1: current.x, y1: current.y, x2: relX, y2: relY }, color, true);
+    setCurrent((prev) => {
+      return {
+        ...prev,
+        x: relX,
+        y: relY,
+      };
+    });
   };
 
   const onMouseDown = async (e) => {
+    setMouseDown(true);
     let relX = e.clientX - rect.x;
     let relY = e.clientY - rect.y;
-    // console.log(e.clientX, rect.x, e.clientY, rect.y);
-    ctx.beginPath();
-    ctx.moveTo(relX, relY);
-    await socket.emit("mousedown", room, relX, relY);
-    setMouseDown(true);
+    setCurrent((prev) => {
+      return {
+        ...prev,
+        x: relX,
+        y: relY,
+      };
+    });
   };
 
-  const onMouseUp = () => {
+  const onMouseUp = (e) => {
     if (!mouseDown) return;
+    let relX = e.clientX - rect.x;
+    let relY = e.clientY - rect.y;
     setMouseDown(false);
-    ctx.beginPath();
+    drawLine({ x1: current.x, y1: current.y, x2: relX, y2: relY }, color, true);
   };
 
   const onClear = () => {
     ctx.clearRect(0, 0, rect.width, rect.height);
-    ctx.beginPath();
     socket.emit("clear", room);
-  };
-
-  const onColorChange = (e) => {
-    setColor(e.target.value);
   };
 
   const onFill = (e) => {
@@ -115,7 +123,13 @@ const Canvas = ({ socket, room }) => {
       </button>
       <div className="right">
         <button className="bucket" onClick={onFill}></button>
-        <input className="color-picker" type="color" onChange={onColorChange} />
+        <input
+          className="color-picker"
+          type="color"
+          onChange={(e) => {
+            setColor(e.target.value);
+          }}
+        />
       </div>
     </div>
   );
