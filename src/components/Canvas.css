@@ -1,17 +1,9 @@
-.canvas {
-  /* background-color: white; */
+#canvas {
   margin: auto;
-  height: fit-content;
-  width: fit-content;
-  text-align: left;
+  background-color: white;
+  margin-top: 10px;
 }
-.clear-btn,
-.undo-btn,
-.colorpicker {
-  display: inline-block;
-  margin: 0.25rem;
-  height: 2rem;
-}
-.colorpicker {
-  float: right;
+.canvas-container {
+  height: 100%;
+  width: 700px;
 }
