@@ -7,6 +7,7 @@ body {
 }
 .Chat {
   width: 36%;
+  min-width: 36%;
   height: 100vh;
   margin-left: 1rem;
   margin-right: 1rem;
@@ -21,12 +22,15 @@ body {
 }
 
 .chat-header {
-  border: 0.15rem solid #b8cce4;
-  background-color: #dbe5f1;
-  border-radius: 0.1rem;
+  border: 0.2rem solid #607d8b;
+  border-top-left-radius: 0.25rem;
+  border-top-right-radius: 0.25rem;
+  background-color: #607d8b;
   position: relative;
 }
 .chat-header h3 {
+  color: #212121;
+  letter-spacing: 0.5rem;
   margin: 0.25rem 0;
   display: inline-block;
 }
@@ -47,7 +51,7 @@ body {
 
 .msg {
   margin: 0.5rem 0.5rem 0 0.5rem;
-  max-width: 50%;
+  max-width: 55%;
   clear: both;
   word-wrap: break-word;
 }
@@ -94,7 +98,7 @@ body {
 }
 
 .msg-input {
-  width: 85%;
+  width: 90%;
   height: 100%;
   float: left;
 }
@@ -109,18 +113,15 @@ body {
 .msg-send {
   display: inline-block;
   height: 100%;
-  width: 15%;
+  width: 10%;
   color: white;
-  background-color: #194728;
+  background-color: #607d8b;
   border: none;
 }
 
 @media (max-width: 1000px) {
   .msg-input {
-    width: 60%;
-  }
-  .file-send {
-    width: 30%;
+    width: 90%;
   }
   .msg-send {
     width: 10%;

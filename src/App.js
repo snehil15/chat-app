@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 import { useState } from "react";
 import Chat from "./components/Chat";
 import Canvas from "./components/Canvas";
+import Chungus from "./images/chungus.gif";
 
 const socket = io("https://chat-server-socketio1.herokuapp.com/");
 // const socket = io("http://localhost:3001", {
@@ -63,6 +64,7 @@ function App() {
           {width > 1000 ? <Canvas socket={socket} room={room} /> : ""}
         </>
       )}
+      <img className="chungus" src={Chungus} height="75px" width="75px" />
     </div>
   );
 }

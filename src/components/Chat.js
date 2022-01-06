@@ -120,7 +120,7 @@ const Chat = ({ socket, username, room, hideChat }) => {
   return (
     <div className="Chat">
       <div className="chat-header">
-        <h3>Chat App</h3>
+        <h3>CHAT.EXE</h3>
         <button className="leave-chat" onClick={leaveChat}>
           Leave Chat
         </button>
