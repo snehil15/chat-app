@@ -9,6 +9,7 @@
   text-align: center;
   height: 100vh;
   align-items: center;
+  justify-content: center;
 }
 .join-chat {
   margin: auto;

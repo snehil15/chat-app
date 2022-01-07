@@ -64,7 +64,7 @@ const Canvas = ({ socket, room }) => {
   // };
 
   const throttle = (callback, delay) => {
-    var prevCall = 0;
+    var prevCall = new Date().getTime();
     return (...args) => {
       var now = new Date().getTime();
       if (now - prevCall >= delay) {
@@ -158,16 +158,16 @@ const Canvas = ({ socket, room }) => {
         <canvas
           id="canvas"
           ref={canvasRef}
-          height={600}
-          width={850}
-          onMouseMove={throttle(onMouseMove, 1000)}
+          height={window.innerHeight * 0.87}
+          width={window.innerWidth * 0.58}
+          onMouseMove={throttle(onMouseMove, 10)}
           onMouseDown={onMouseDown}
           onMouseUp={onMouseUp}
           onMouseOut={onMouseUp}
         ></canvas>
         <div className="canvas-footer">
           <button className="clear-btn" onClick={onClear}>
-            clear
+            Clear
           </button>
           <input
             className="color-picker"
