@@ -64,7 +64,7 @@ const Canvas = ({ socket, room }) => {
   // };
 
   const throttle = (callback, delay) => {
-    var prevCall = new Date().getTime();
+    var prevCall = 0;
     return (...args) => {
       var now = new Date().getTime();
       if (now - prevCall >= delay) {
