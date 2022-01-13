@@ -64,7 +64,7 @@ const Canvas = ({ socket, room }) => {
   // };
 
   const throttle = (callback, delay) => {
-    var prevCall = 0;
+    var prevCall = new Date().getTime();
     return (...args) => {
       var now = new Date().getTime();
       if (now - prevCall >= delay) {
@@ -75,6 +75,7 @@ const Canvas = ({ socket, room }) => {
   };
 
   const drawLine = (data, color, brushSize, emit) => {
+    if(!canvasRef || !canvasRef.current) return;
     let ctx = canvasRef.current.getContext("2d");
     ctx.beginPath();
     ctx.moveTo(data.x1, data.y1);
@@ -149,6 +150,11 @@ const Canvas = ({ socket, room }) => {
     setBrushSize(e.target.value);
   };
 
+  const clearMyInterval = (color) => {
+    setColor(color);
+    clearInterval(myInterval);
+  }
+
   return (
     <div className="jamboard">
       <div ref={canvasContainerRef} className="canvas-container">
@@ -189,52 +195,31 @@ const Canvas = ({ socket, room }) => {
       <div className="color-palette">
         <button
           className="color red"
-          onClick={(e) => {
-            setColor("red");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("red")}
         ></button>
         <button
           className="color blue"
-          onClick={(e) => {
-            setColor("blue");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("blue")}
         ></button>
         <button
           className="color green"
-          onClick={(e) => {
-            setColor("green");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("green")}
         ></button>
         <button
           className="color yellow"
-          onClick={(e) => {
-            setColor("yellow");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("yellow")}
         ></button>
         <button
           className="color purple"
-          onClick={(e) => {
-            setColor("purple");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("purple")}
         ></button>
         <button
           className="color black"
-          onClick={(e) => {
-            setColor("black");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("black")}
         ></button>
         <button
           className="color white"
-          onClick={(e) => {
-            setColor("white");
-            clearInterval(myInterval);
-          }}
+          onClick={()=>clearMyInterval("white")}
         ></button>
         <button
           className="color rainbow"

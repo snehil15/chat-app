@@ -9,7 +9,7 @@ const socket = io("https://chat-server-socketio1.herokuapp.com/");
 // const socket = io("http://localhost:3001", {
 //   forceNew: true,
 // });
-//hello
+
 function App() {
   const [username, setUsername] = useState();
   const [room, setRoom] = useState();
